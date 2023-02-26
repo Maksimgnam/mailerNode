@@ -1,0 +1,110 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="style.css">
+    <title>Document</title>
+</head>
+
+<body>
+    <div class="wrap">
+
+
+        <form id="contact">
+            <h1>
+                Mailer
+            </h1>
+            <input type="text" id="userName" class="inpTex" placeholder="Write email">
+            <button id="sendBtn">send</button>
+
+            <label class="input-file">
+
+                <input name="fileInfo" id="fileInfo" accept=".txt" multiple type="file">
+                <p id="Info__file">Drag file</p>
+                <button id="upload">Add File</button>
+
+
+            </label>
+
+            <!-- 
+            <div class="input__block">
+              .</p>
+            </div> -->
+
+        </form>
+    </div>
+
+    <!-- <script src="app.js"></script> -->
+    <script>
+        sendBtn.onclick = function () {
+            const data = {
+
+                name: userName.value
+
+            }
+            sendMail(data)
+        }
+
+        function sendMail(formData) {
+            const form = document.getElementById('contact')
+            fetch('send', {
+                method: "POST",
+                headers: {
+                    "Content-Type": 'application/json'
+                },
+                body: JSON.stringify(formData)
+
+            })
+
+                .then(_ => {
+                    form.reset();
+
+                })
+                .catch(error => console.log(error))
+
+
+
+
+        }
+
+        let fileEx;
+        fileInfo.addEventListener("change", function () {
+            let filePath = fileInfo.value;
+            let fileName = filePath.split('\\');
+            let fileNameSlice = fileName.pop();
+            Info__file.innerText = fileNameSlice;
+            fileEx = fileNameSlice.split('.');
+            console.log(fileEx[1])
+        });
+
+        upload.onclick = () => {
+            if (fileInfo.value !== '') {
+                if (fileEx[1] == 'txt') {
+
+                    localStorage.setItem('verifyChange', true);
+
+                    ////
+
+                    let dataFile = new FormData();
+                    dataFile.append('dataFile', fileInfo.files[0]);
+                    let Request = new XMLHttpRequest();
+                    Request.open('POST', '/sendFile');
+                    Request.send(dataFile);
+
+                    ////
+
+                } else {
+                    alert('Its not a txt')
+                }
+            } else {
+                alert('No file')
+            }
+
+        }
+    </script>
+</body>
+
+</html>
